@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<style>
+body {
+  font: 11px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.tooltip {
+  position: absolute;
+  width: 200px;
+  height: 28px;
+  pointer-events: none;
+}
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script>
+
+var values = [
+{
+ "contig": "contig_45487",
+ "gc_content": 63.99360063993601,
+ "lengte": 10001
+}, {
+ "contig": "contig_55144",
+ "gc_content": 65.4034596540346,
+ "lengte": 10001
+}, {
+ "contig": "contig_57191",
+ "gc_content": 66.4833516648335,
+ "lengte": 10001
+}, {
+ "contig": "contig_48958",
+ "gc_content": 67.6032396760324,
+ "lengte": 10001
+}, {
+ "contig": "contig_19919",
+ "gc_content": 67.67323267673233,
+ "lengte": 10001
+}, {
+ "contig": "contig_31946",
+ "gc_content": 63.40365963403659,
+ "lengte": 10001
+}, {
+ "contig": "contig_24727",
+ "gc_content": 66.59334066593341,
+ "lengte": 10001
+}, {
+ "contig": "contig_52573",
+ "gc_content": 66.8033196680332,
+ "lengte": 10001
+}, {
+ "contig": "contig_54863",
+ "gc_content": 65.82341765823418,
+ "lengte": 10001
+}, {
+ "contig": "contig_55634",
+ "gc_content": 65.35346465353464,
+ "lengte": 10001
+}, {
+ "contig": "contig_26724",
+ "gc_content": 65.15348465153484,
+ "lengte": 10001
+}, {
+ "contig": "contig_59514",
+ "gc_content": 64.53354664533548,
+ "lengte": 10001
+}, {
+ "contig": "contig_24675",
+ "gc_content": 64.33356664333567,
+ "lengte": 10001
+}, {
+ "contig": "contig_59211",
+ "gc_content": 66.97330266973303,
+ "lengte": 10001
+}, {
+ "contig": "contig_28127",
+ "gc_content": 68.3031696830317,
+ "lengte": 10001
+}, {
+ "contig": "contig_935",
+ "gc_content": 66.46335366463354,
+ "lengte": 10001
+}, {
+ "contig": "contig_18812",
+ "gc_content": 64.8035196480352,
+ "lengte": 10001
+}, {
+ "contig": "contig_8021",
+ "gc_content": 66.47335266473353,
+ "lengte": 10001
+}, {
+ "contig": "contig_23910",
+ "gc_content": 65.96340365963404,
+ "lengte": 10001
+}, {
+ "contig": "contig_30131",
+ "gc_content": 64.96350364963503,
+ "lengte": 10001
+}, {
+ "contig": "contig_841",
+ "gc_content": 66.003399660034,
+ "lengte": 10001
+}, {
+ "contig": "contig_1511",
+ "gc_content": 64.53354664533548,
+ "lengte": 10001
+}, {
+ "contig": "contig_3582",
+ "gc_content": 65.81341865813418,
+ "lengte": 10001
+}, {
+ "contig": "contig_39847",
+ "gc_content": 64.55354464553544,
+ "lengte": 10001
+}, {
+ "contig": "contig_26045",
+ "gc_content": 66.4073894020418,
+ "lengte": 14399
+}, {
+ "contig": "contig_22893",
+ "gc_content": 61.72382761723828,
+ "lengte": 10001
+}, {
+ "contig": "contig_41301",
+ "gc_content": 68.50314968503149,
+ "lengte": 10001
+}, {
+ "contig": "contig_11227",
+ "gc_content": 68.92310768923107,
+ "lengte": 10001
+}, {
+ "contig": "contig_59622",
+ "gc_content": 67.27327267273273,
+ "lengte": 10001
+}, {
+ "contig": "contig_35347",
+ "gc_content": 68.39316068393161,
+ "lengte": 10001
+}, {
+ "contig": "contig_9394",
+ "gc_content": 68.34316568343166,
+ "lengte": 10001
+}, {
+ "contig": "contig_36666",
+ "gc_content": 68.47315268473153,
+ "lengte": 10001
+}, {
+ "contig": "contig_40422",
+ "gc_content": 68.4031596840316,
+ "lengte": 10001
+}, {
+ "contig": "contig_22259",
+ "gc_content": 67.52324767523248,
+ "lengte": 10001
+}, {
+ "contig": "contig_56045",
+ "gc_content": 66.003399660034,
+ "lengte": 10001
+}, {
+ "contig": "contig_50142",
+ "gc_content": 66.03339666033396,
+ "lengte": 10001
+}, {
+ "contig": "contig_14544",
+ "gc_content": 68.86311368863115,
+ "lengte": 10001
+}, {
+ "contig": "contig_17116",
+ "gc_content": 68.01319868013199,
+ "lengte": 10001
+}, {
+ "contig": "contig_7168",
+ "gc_content": 57.67423257674233,
+ "lengte": 10001
+}, {
+ "contig": "contig_23072",
+ "gc_content": 58.11418858114189,
+ "lengte": 10001
+}, {
+ "contig": "contig_3711",
+ "gc_content": 66.1033896610339,
+ "lengte": 10001
+}, {
+ "contig": "contig_51939",
+ "gc_content": 69.72302769723028,
+ "lengte": 10001
+}, {
+ "contig": "contig_56644",
+ "gc_content": 68.1931806819318,
+ "lengte": 10001
+}, {
+ "contig": "contig_10936",
+ "gc_content": 67.41325867413258,
+ "lengte": 10001
+}, {
+ "contig": "contig_22954",
+ "gc_content": 69.18308169183082,
+ "lengte": 10001
+}, {
+ "contig": "contig_23226",
+ "gc_content": 68.65313468653135,
+ "lengte": 10001
+}, {
+ "contig": "contig_24399",
+ "gc_content": 67.37292669876939,
+ "lengte": 18690
+}, {
+ "contig": "contig_50824",
+ "gc_content": 68.17318268173183,
+ "lengte": 10001
+}, {
+ "contig": "contig_1791",
+ "gc_content": 66.8933106689331,
+ "lengte": 10001
+}, {
+ "contig": "contig_30308",
+ "gc_content": 65.56344365563443,
+ "lengte": 10001
+}, {
+ "contig": "contig_15964",
+ "gc_content": 64.73352664733527,
+ "lengte": 10001
+}, {
+ "contig": "contig_34136",
+ "gc_content": 66.22337766223377,
+ "lengte": 10001
+}, {
+ "contig": "contig_35715",
+ "gc_content": 66.63333666633336,
+ "lengte": 10001
+}, {
+ "contig": "contig_56475",
+ "gc_content": 68.92310768923107,
+ "lengte": 10001
+}, {
+ "contig": "contig_39140",
+ "gc_content": 67.5932406759324,
+ "lengte": 10001
+}, {
+ "contig": "contig_55575",
+ "gc_content": 64.06359364063594,
+ "lengte": 10001
+}, {
+ "contig": "contig_44471",
+ "gc_content": 64.76352364763524,
+ "lengte": 10001
+}, {
+ "contig": "contig_38057",
+ "gc_content": 67.63323667633236,
+ "lengte": 10001
+}, {
+ "contig": "contig_20676",
+ "gc_content": 66.76332366763323,
+ "lengte": 10001
+}, {
+ "contig": "contig_46305",
+ "gc_content": 66.77332266773323,
+ "lengte": 10001
+}, {
+ "contig": "contig_54478",
+ "gc_content": 64.6035396460354,
+ "lengte": 10001
+}, {
+ "contig": "contig_40767",
+ "gc_content": 62.36376362363764,
+ "lengte": 10001
+}, {
+ "contig": "contig_18944",
+ "gc_content": 67.41325867413258,
+ "lengte": 10001
+}, {
+ "contig": "contig_3318",
+ "gc_content": 67.37326267373263,
+ "lengte": 10001
+}, {
+ "contig": "contig_20761",
+ "gc_content": 65.09349065093491,
+ "lengte": 10001
+}, {
+ "contig": "contig_50487",
+ "gc_content": 68.61313868613139,
+ "lengte": 10001
+}, {
+ "contig": "contig_47177",
+ "gc_content": 66.77332266773323,
+ "lengte": 10001
+}, {
+ "contig": "contig_16017",
+ "gc_content": 64.96543609354318,
+ "lengte": 13598
+}, {
+ "contig": "contig_44864",
+ "gc_content": 66.51334866513349,
+ "lengte": 10001
+}, {
+ "contig": "contig_11707",
+ "gc_content": 68.45315468453154,
+ "lengte": 10001
+}, {
+ "contig": "contig_15775",
+ "gc_content": 67.72322767723227,
+ "lengte": 10001
+}, {
+ "contig": "contig_27662",
+ "gc_content": 64.78352164783522,
+ "lengte": 10001
+}, {
+ "contig": "contig_15788",
+ "gc_content": 68.3031696830317,
+ "lengte": 10001
+}, {
+ "contig": "contig_17198",
+ "gc_content": 66.98330166983301,
+ "lengte": 10001
+}, {
+ "contig": "contig_20440",
+ "gc_content": 65.69343065693431,
+ "lengte": 10001
+}, {
+ "contig": "contig_19776",
+ "gc_content": 66.55334466553344,
+ "lengte": 10001
+}, {
+ "contig": "contig_27324",
+ "gc_content": 65.96340365963404,
+ "lengte": 10001
+}, {
+ "contig": "contig_26904",
+ "gc_content": 64.97350264973502,
+ "lengte": 10001
+}, {
+ "contig": "contig_25813",
+ "gc_content": 67.3032696730327,
+ "lengte": 10001
+}, {
+ "contig": "contig_43318",
+ "gc_content": 65.53344665533447,
+ "lengte": 10001
+}, {
+ "contig": "contig_51264",
+ "gc_content": 66.8933106689331,
+ "lengte": 10001
+}, {
+ "contig": "contig_32792",
+ "gc_content": 65.72342765723428,
+ "lengte": 10001
+}, {
+ "contig": "contig_9565",
+ "gc_content": 64.88351164883511,
+ "lengte": 10001
+}, {
+ "contig": "contig_16661",
+ "gc_content": 65.10476190476192,
+ "lengte": 15750
+}, {
+ "contig": "contig_57267",
+ "gc_content": 70.0929907009299,
+ "lengte": 10001
+}, {
+ "contig": "contig_28321",
+ "gc_content": 67.17328267173282,
+ "lengte": 10001
+}, {
+ "contig": "contig_53840",
+ "gc_content": 67.33326667333267,
+ "lengte": 10001
+}, {
+ "contig": "contig_20148",
+ "gc_content": 65.34346565343465,
+ "lengte": 10001
+}, {
+ "contig": "contig_10940",
+ "gc_content": 67.74322567743226,
+ "lengte": 10001
+}, {
+ "contig": "contig_54875",
+ "gc_content": 70.32296770322968,
+ "lengte": 10001
+}, {
+ "contig": "contig_34080",
+ "gc_content": 70.25297470252974,
+ "lengte": 10001
+}, {
+ "contig": "contig_4815",
+ "gc_content": 71.15288471152886,
+ "lengte": 10001
+}, {
+ "contig": "contig_3931",
+ "gc_content": 69.97300269973003,
+ "lengte": 10001
+}, {
+ "contig": "contig_57714",
+ "gc_content": 69.45305469453055,
+ "lengte": 10001
+}, {
+ "contig": "contig_30737",
+ "gc_content": 64.63353664633537,
+ "lengte": 10001
+}, {
+ "contig": "contig_4584",
+ "gc_content": 65.24347565243475,
+ "lengte": 10001
+}, {
+ "contig": "contig_52841",
+ "gc_content": 68.35316468353165,
+ "lengte": 10001
+}, {
+ "contig": "contig_56291",
+ "gc_content": 67.33326667333267,
+ "lengte": 10001
+}, {
+ "contig": "contig_36717",
+ "gc_content": 66.25579086697552,
+ "lengte": 12088
+}, {
+ "contig": "contig_19652",
+ "gc_content": 64.26357364263573,
+ "lengte": 10001
+}, {
+ "contig": "contig_17070",
+ "gc_content": 68.82311768823118,
+ "lengte": 10001
+}, {
+ "contig": "contig_957",
+ "gc_content": 68.6031396860314,
+ "lengte": 10001
+}, {
+ "contig": "contig_56874",
+ "gc_content": 66.34336566343366,
+ "lengte": 10001
+}, {
+ "contig": "contig_10457",
+ "gc_content": 65.1934806519348,
+ "lengte": 10001
+}, {
+ "contig": "contig_38806",
+ "gc_content": 66.8033196680332,
+ "lengte": 10001
+}, {
+ "contig": "contig_49338",
+ "gc_content": 68.37316268373162,
+ "lengte": 10001
+}, {
+ "contig": "contig_30584",
+ "gc_content": 65.39346065393461,
+ "lengte": 10001
+}, {
+ "contig": "contig_38126",
+ "gc_content": 66.7033296670333,
+ "lengte": 10001
+}, {
+ "contig": "contig_18778",
+ "gc_content": 65.84341565843415,
+ "lengte": 10001
+}, {
+ "contig": "contig_57668",
+ "gc_content": 67.04329567043295,
+ "lengte": 10001
+}, {
+ "contig": "contig_638",
+ "gc_content": 68.14318568143186,
+ "lengte": 10001
+}, {
+ "contig": "contig_57989",
+ "gc_content": 66.73332666733327,
+ "lengte": 10001
+}, {
+ "contig": "contig_58444",
+ "gc_content": 67.48325167483252,
+ "lengte": 10001
+}, {
+ "contig": "contig_18084",
+ "gc_content": 67.82321767823217,
+ "lengte": 10001
+}, {
+ "contig": "contig_34328",
+ "gc_content": 64.7426784191072,
+ "lengte": 14068
+}, {
+ "contig": "contig_39509",
+ "gc_content": 62.413758624137586,
+ "lengte": 10001
+}, {
+ "contig": "contig_24715",
+ "gc_content": 66.28337166283372,
+ "lengte": 10001
+}, {
+ "contig": "contig_48897",
+ "gc_content": 64.8935106489351,
+ "lengte": 10001
+}, {
+ "contig": "contig_43725",
+ "gc_content": 65.33346665333467,
+ "lengte": 10001
+}, {
+ "contig": "contig_53254",
+ "gc_content": 66.6933306669333,
+ "lengte": 10001
+}, {
+ "contig": "contig_56143",
+ "gc_content": 67.6832316768323,
+ "lengte": 10001
+}, {
+ "contig": "contig_27844",
+ "gc_content": 66.77332266773323,
+ "lengte": 10001
+}, {
+ "contig": "contig_3300",
+ "gc_content": 66.23337666233377,
+ "lengte": 10001
+}, {
+ "contig": "contig_56448",
+ "gc_content": 67.72322767723227,
+ "lengte": 10001
+}, {
+ "contig": "contig_6759",
+ "gc_content": 67.5932406759324,
+ "lengte": 10001
+}, {
+ "contig": "contig_43505",
+ "gc_content": 66.12338766123388,
+ "lengte": 10001
+}, {
+ "contig": "contig_42466",
+ "gc_content": 67.0993006993007,
+ "lengte": 17875
+}, {
+ "contig": "contig_23890",
+ "gc_content": 59.944005599440054,
+ "lengte": 10001
+}, {
+ "contig": "contig_45710",
+ "gc_content": 66.12338766123388,
+ "lengte": 10001
+}, {
+ "contig": "contig_34983",
+ "gc_content": 65.21347865213478,
+ "lengte": 10001
+}, {
+ "contig": "contig_2009",
+ "gc_content": 67.78322167783222,
+ "lengte": 10001
+}, {
+ "contig": "contig_15399",
+ "gc_content": 67.03329667033296,
+ "lengte": 10001
+}, {
+ "contig": "contig_45830",
+ "gc_content": 69.06309369063094,
+ "lengte": 10001
+}, {
+ "contig": "contig_26645",
+ "gc_content": 65.26347365263474,
+ "lengte": 10001
+}, {
+ "contig": "contig_32938",
+ "gc_content": 68.4031596840316,
+ "lengte": 10001
+}, {
+ "contig": "contig_23812",
+ "gc_content": 68.39316068393161,
+ "lengte": 10001
+}, {
+ "contig": "contig_125",
+ "gc_content": 70.17298270172982,
+ "lengte": 10001
+}, {
+ "contig": "contig_12018",
+ "gc_content": 68.55314468553144,
+ "lengte": 10001
+}, {
+ "contig": "contig_9828",
+ "gc_content": 67.54324567543246,
+ "lengte": 10001
+}, {
+ "contig": "contig_10911",
+ "gc_content": 69.25307469253075,
+ "lengte": 10001
+}, {
+ "contig": "contig_32933",
+ "gc_content": 67.17328267173282,
+ "lengte": 10001
+}, {
+ "contig": "contig_656",
+ "gc_content": 68.45315468453154,
+ "lengte": 10001
+}, {
+ "contig": "contig_57839",
+ "gc_content": 62.63373662633737,
+ "lengte": 10001
+}, {
+ "contig": "contig_27640",
+ "gc_content": 67.6132386761324,
+ "lengte": 10001
+}, {
+ "contig": "contig_39752",
+ "gc_content": 63.27367263273672,
+ "lengte": 10001
+}, {
+ "contig": "contig_31859",
+ "gc_content": 65.32346765323467,
+ "lengte": 10001
+}, {
+ "contig": "contig_48177",
+ "gc_content": 64.2935706429357,
+ "lengte": 10001
+}, {
+ "contig": "contig_11456",
+ "gc_content": 64.98370465352353,
+ "lengte": 18717
+}, {
+ "contig": "contig_14268",
+ "gc_content": 66.71332866713328,
+ "lengte": 10001
+}, {
+ "contig": "contig_1306",
+ "gc_content": 65.85341465853415,
+ "lengte": 10001
+}, {
+ "contig": "contig_23713",
+ "gc_content": 65.94340565943405,
+ "lengte": 10001
+}, {
+ "contig": "contig_34971",
+ "gc_content": 61.92380761923808,
+ "lengte": 10001
+}, {
+ "contig": "contig_19396",
+ "gc_content": 67.8032196780322,
+ "lengte": 10001
+}, {
+ "contig": "contig_37311",
+ "gc_content": 68.07319268073194,
+ "lengte": 10001
+}, {
+ "contig": "contig_55083",
+ "gc_content": 66.993300669933,
+ "lengte": 10001
+}, {
+ "contig": "contig_31975",
+ "gc_content": 70.54294570542946,
+ "lengte": 10001
+}, {
+ "contig": "contig_24030",
+ "gc_content": 67.22327767223277,
+ "lengte": 10001
+}, {
+ "contig": "contig_11652",
+ "gc_content": 66.79332066793322,
+ "lengte": 10001
+}, {
+ "contig": "contig_54876",
+ "gc_content": 66.06055876385204,
+ "lengte": 12814
+}, {
+ "contig": "contig_10627",
+ "gc_content": 69.13308669133087,
+ "lengte": 10001
+}, {
+ "contig": "contig_50554",
+ "gc_content": 66.71332866713328,
+ "lengte": 10001
+}, {
+ "contig": "contig_35284",
+ "gc_content": 69.94300569943006,
+ "lengte": 10001
+}, {
+ "contig": "contig_46733",
+ "gc_content": 69.7930206979302,
+ "lengte": 10001
+}, {
+ "contig": "contig_24989",
+ "gc_content": 69.28307169283072,
+ "lengte": 10001
+}, {
+ "contig": "contig_10100",
+ "gc_content": 69.52304769523047,
+ "lengte": 10001
+}, {
+ "contig": "contig_16283",
+ "gc_content": 66.74332566743327,
+ "lengte": 10001
+}, {
+ "contig": "contig_4353",
+ "gc_content": 67.9032096790321,
+ "lengte": 10001
+}, {
+ "contig": "contig_29973",
+ "gc_content": 69.01309869013099,
+ "lengte": 10001
+}, {
+ "contig": "contig_46831",
+ "gc_content": 68.13318668133186,
+ "lengte": 10001
+}, {
+ "contig": "contig_52665",
+ "gc_content": 67.30229406640208,
+ "lengte": 10331
+}, {
+ "contig": "contig_21782",
+ "gc_content": 65.66343365663434,
+ "lengte": 10001
+}, {
+ "contig": "contig_29822",
+ "gc_content": 71.71282871712829,
+ "lengte": 10001
+}, {
+ "contig": "contig_57995",
+ "gc_content": 67.79322067793221,
+ "lengte": 10001
+}, {
+ "contig": "contig_36794",
+ "gc_content": 66.56334366563344,
+ "lengte": 10001
+}, {
+ "contig": "contig_1625",
+ "gc_content": 67.92320767923208,
+ "lengte": 10001
+}, {
+ "contig": "contig_47572",
+ "gc_content": 66.15338466153385,
+ "lengte": 10001
+}, {
+ "contig": "contig_19154",
+ "gc_content": 67.85321467853215,
+ "lengte": 10001
+}, {
+ "contig": "contig_22497",
+ "gc_content": 64.11358864113589,
+ "lengte": 10001
+}, {
+ "contig": "contig_37549",
+ "gc_content": 66.72332766723328,
+ "lengte": 10001
+}, {
+ "contig": "contig_13042",
+ "gc_content": 65.51344865513448,
+ "lengte": 10001
+}, {
+ "contig": "contig_32635",
+ "gc_content": 64.0157639450283,
+ "lengte": 19792
+}, {
+ "contig": "contig_27088",
+ "gc_content": 66.65333466653335,
+ "lengte": 10001
+}, {
+ "contig": "contig_27391",
+ "gc_content": 66.84331566843315,
+ "lengte": 10001
+}, {
+ "contig": "contig_7622",
+ "gc_content": 66.72332766723328,
+ "lengte": 10001
+}, {
+ "contig": "contig_58123",
+ "gc_content": 65.72342765723428,
+ "lengte": 10001
+}, {
+ "contig": "contig_58164",
+ "gc_content": 65.99340065993401,
+ "lengte": 10001
+}, {
+ "contig": "contig_30559",
+ "gc_content": 62.76372362763723,
+ "lengte": 10001
+}, {
+ "contig": "contig_6236",
+ "gc_content": 66.72332766723328,
+ "lengte": 10001
+}, {
+ "contig": "contig_10165",
+ "gc_content": 66.04681895412497,
+ "lengte": 10594
+}, {
+ "contig": "contig_11527",
+ "gc_content": 64.06359364063594,
+ "lengte": 10001
+}, {
+ "contig": "contig_56602",
+ "gc_content": 63.433656634336565,
+ "lengte": 10001
+}, {
+ "contig": "contig_20399",
+ "gc_content": 61.37386261373863,
+ "lengte": 10001
+}, {
+ "contig": "contig_44700",
+ "gc_content": 66.25337466253374,
+ "lengte": 10001
+}, {
+ "contig": "contig_51120",
+ "gc_content": 65.21347865213478,
+ "lengte": 10001
+}, {
+ "contig": "contig_17712",
+ "gc_content": 66.95230808467227,
+ "lengte": 19605
+}, {
+ "contig": "contig_49166",
+ "gc_content": 68.27317268273173,
+ "lengte": 10001
+}, {
+ "contig": "contig_42921",
+ "gc_content": 68.11318868113189,
+ "lengte": 10001
+}, {
+ "contig": "contig_9560",
+ "gc_content": 69.86301369863014,
+ "lengte": 10001
+}, {
+ "contig": "contig_30596",
+ "gc_content": 67.2032796720328,
+ "lengte": 10001
+}, {
+ "contig": "contig_42770",
+ "gc_content": 69.53304669533047,
+ "lengte": 10001
+}, {
+ "contig": "contig_3711",
+ "gc_content": 66.6323377960865,
+ "lengte": 18449
+}, {
+ "contig": "contig_23439",
+ "gc_content": 67.24327567243276,
+ "lengte": 10001
+}, {
+ "contig": "contig_31717",
+ "gc_content": 66.6933306669333,
+ "lengte": 10001
+}, {
+ "contig": "contig_29217",
+ "gc_content": 70.64293570642936,
+ "lengte": 10001
+}, {
+ "contig": "contig_13444",
+ "gc_content": 69.32306769323068,
+ "lengte": 10001
+}, {
+ "contig": "contig_35449",
+ "gc_content": 68.2931706829317,
+ "lengte": 10001
+}, {
+ "contig": "contig_28025",
+ "gc_content": 68.8031196880312,
+ "lengte": 10001
+}, {
+ "contig": "contig_43593",
+ "gc_content": 67.81321867813219,
+ "lengte": 10001
+}, {
+ "contig": "contig_45140",
+ "gc_content": 72.14278572142786,
+ "lengte": 10001
+}, {
+ "contig": "contig_55292",
+ "gc_content": 68.62313768623137,
+ "lengte": 10001
+}, {
+ "contig": "contig_43879",
+ "gc_content": 67.67323267673233,
+ "lengte": 10001
+}, {
+ "contig": "contig_13483",
+ "gc_content": 66.77332266773323,
+ "lengte": 10001
+}, {
+ "contig": "contig_30181",
+ "gc_content": 68.77065247829741,
+ "lengte": 17855
+}, {
+ "contig": "contig_43245",
+ "gc_content": 58.58414158584142,
+ "lengte": 10001
+}, {
+ "contig": "contig_29704",
+ "gc_content": 63.693630636936305,
+ "lengte": 10001
+}, {
+ "contig": "contig_19982",
+ "gc_content": 70.34296570342966,
+ "lengte": 10001
+}, {
+ "contig": "contig_52226",
+ "gc_content": 69.71302869713028,
+ "lengte": 10001
+}, {
+ "contig": "contig_16485",
+ "gc_content": 68.01319868013199,
+ "lengte": 10001
+}, {
+ "contig": "contig_57261",
+ "gc_content": 66.37760327756914,
+ "lengte": 14645
+}, {
+ "contig": "contig_21906",
+ "gc_content": 66.61333866613339,
+ "lengte": 10001
+}, {
+ "contig": "contig_1788",
+ "gc_content": 66.06339366063393,
+ "lengte": 10001
+}, {
+ "contig": "contig_1679",
+ "gc_content": 65.35346465353464,
+ "lengte": 10001
+}, {
+ "contig": "contig_40321",
+ "gc_content": 67.43325667433257,
+ "lengte": 10001
+}, {
+ "contig": "contig_42952",
+ "gc_content": 67.96320367963203,
+ "lengte": 10001
+}, {
+ "contig": "contig_11102",
+ "gc_content": 65.67343265673433,
+ "lengte": 10001
+}, {
+ "contig": "contig_48280",
+ "gc_content": 67.12328767123287,
+ "lengte": 10001
+}, {
+ "contig": "contig_56364",
+ "gc_content": 69.38306169383061,
+ "lengte": 10001
+}, {
+ "contig": "contig_7778",
+ "gc_content": 68.32316768323167,
+ "lengte": 10001
+}, {
+ "contig": "contig_51986",
+ "gc_content": 65.07552427042089,
+ "lengte": 13638
+}, {
+ "contig": "contig_26587",
+ "gc_content": 67.63323667633236,
+ "lengte": 10001
+}, {
+ "contig": "contig_10251",
+ "gc_content": 67.55324467553244,
+ "lengte": 10001
+}, {
+ "contig": "contig_47723",
+ "gc_content": 70.59294070592941,
+ "lengte": 10001
+}, {
+ "contig": "contig_23483",
+ "gc_content": 68.50314968503149,
+ "lengte": 10001
+}, {
+ "contig": "contig_57724",
+ "gc_content": 66.42512077294685,
+ "lengte": 16146
+}, {
+ "contig": "contig_22341",
+ "gc_content": 67.64323567643235,
+ "lengte": 10001
+}, {
+ "contig": "contig_7863",
+ "gc_content": 69.57304269573042,
+ "lengte": 10001
+}, {
+ "contig": "contig_46773",
+ "gc_content": 64.48246015986966,
+ "lengte": 19641
+}, {
+ "contig": "contig_47646",
+ "gc_content": 65.86341365863414,
+ "lengte": 10001
+}, {
+ "contig": "contig_51045",
+ "gc_content": 69.24307569243075,
+ "lengte": 10001
+}, {
+ "contig": "contig_10979",
+ "gc_content": 69.98300169983001,
+ "lengte": 10001
+}, {
+ "contig": "contig_21958",
+ "gc_content": 67.33326667333267,
+ "lengte": 10001
+}, {
+ "contig": "contig_48933",
+ "gc_content": 67.22327767223277,
+ "lengte": 10001
+}, {
+ "contig": "contig_14257",
+ "gc_content": 65.83341665833416,
+ "lengte": 10001
+}, {
+ "contig": "contig_43018",
+ "gc_content": 69.21904233940822,
+ "lengte": 14431
+}, {
+ "contig": "contig_44860",
+ "gc_content": 69.4130586941306,
+ "lengte": 10001
+}, {
+ "contig": "contig_14937",
+ "gc_content": 69.69303069693031,
+ "lengte": 10001
+}, {
+ "contig": "contig_10329",
+ "gc_content": 70.79379773200648,
+ "lengte": 17284
+}, {
+ "contig": "contig_51024",
+ "gc_content": 63.70362963703629,
+ "lengte": 10001
+}, {
+ "contig": "contig_42833",
+ "gc_content": 58.664133586641334,
+ "lengte": 10001
+}, {
+ "contig": "contig_54382",
+ "gc_content": 67.68807124443403,
+ "lengte": 17068
+}, {
+ "contig": "contig_19645",
+ "gc_content": 64.83351664833516,
+ "lengte": 10001
+}, {
+ "contig": "contig_43700",
+ "gc_content": 66.4833516648335,
+ "lengte": 10001
+}, {
+ "contig": "contig_1731",
+ "gc_content": 62.98705522669616,
+ "lengte": 15373
+}, {
+ "contig": "contig_47612",
+ "gc_content": 67.6932306769323,
+ "lengte": 10001
+}, {
+ "contig": "contig_39834",
+ "gc_content": 66.63333666633336,
+ "lengte": 10001
+}, {
+ "contig": "contig_32769",
+ "gc_content": 64.91350864913508,
+ "lengte": 10001
+}, {
+ "contig": "contig_7637",
+ "gc_content": 66.37336266373363,
+ "lengte": 10001
+}, {
+ "contig": "contig_15209",
+ "gc_content": 66.52862985685071,
+ "lengte": 19560
+}, {
+ "contig": "contig_11170",
+ "gc_content": 68.55314468553144,
+ "lengte": 10001
+}, {
+ "contig": "contig_54670",
+ "gc_content": 69.35306469353064,
+ "lengte": 10001
+}, {
+ "contig": "contig_27957",
+ "gc_content": 68.8995633187773,
+ "lengte": 11450
+}, {
+ "contig": "contig_50260",
+ "gc_content": 66.63333666633336,
+ "lengte": 10001
+}, {
+ "contig": "contig_21710",
+ "gc_content": 68.59593262119968,
+ "lengte": 19472
+}, {
+ "contig": "contig_1185",
+ "gc_content": 65.83341665833416,
+ "lengte": 10001
+}, {
+ "contig": "contig_3852",
+ "gc_content": 65.19591426657736,
+ "lengte": 11944
+}, {
+ "contig": "contig_54188",
+ "gc_content": 66.64923656138883,
+ "lengte": 19124
+}, {
+ "contig": "contig_22897",
+ "gc_content": 66.47351477904596,
+ "lengte": 17085
+}, {
+ "contig": "contig_5619",
+ "gc_content": 66.47678018575851,
+ "lengte": 16150
+}, {
+ "contig": "contig_41925",
+ "gc_content": 64.20958006934634,
+ "lengte": 15574
+}, {
+ "contig": "contig_53373",
+ "gc_content": 60.30977074235808,
+ "lengte": 14656
+}, {
+ "contig": "contig_12537",
+ "gc_content": 63.00077997589165,
+ "lengte": 14103
+}, {
+ "contig": "contig_3002",
+ "gc_content": 66.19366626065774,
+ "lengte": 16420
+}, {
+ "contig": "contig_34984",
+ "gc_content": 65.14039722140691,
+ "lengte": 10221
+}, {
+ "contig": "contig_53244",
+ "gc_content": 66.83513595471545,
+ "lengte": 9893
+}, {
+ "contig": "contig_17097",
+ "gc_content": 65.23727844482562,
+ "lengte": 8745
+}, {
+ "contig": "contig_50048",
+ "gc_content": 64.12799622151375,
+ "lengte": 8469
+}, {
+ "contig": "contig_39220",
+ "gc_content": 65.75233408120431,
+ "lengte": 13817
+}, {
+ "contig": "contig_20069",
+ "gc_content": 54.52066590126292,
+ "lengte": 6968
+}, {
+ "contig": "contig_49087",
+ "gc_content": 66.87414604524062,
+ "lengte": 6587
+}, {
+ "contig": "contig_40488",
+ "gc_content": 66.61519456454602,
+ "lengte": 6476
+}, {
+ "contig": "contig_3859",
+ "gc_content": 65.0016061676839,
+ "lengte": 6226
+}, {
+ "contig": "contig_38455",
+ "gc_content": 68.59193438140807,
+ "lengte": 5852
+}, {
+ "contig": "contig_4907",
+ "gc_content": 69.88529361410717,
+ "lengte": 5841
+}, {
+ "contig": "contig_39779",
+ "gc_content": 64.21559548064457,
+ "lengte": 5399
+}, {
+ "contig": "contig_39802",
+ "gc_content": 69.71384674476666,
+ "lengte": 5207
+}, {
+ "contig": "contig_17760",
+ "gc_content": 56.39279437609842,
+ "lengte": 4552
+}, {
+ "contig": "contig_37363",
+ "gc_content": 52.23746345851136,
+ "lengte": 4447
+}, {
+ "contig": "contig_31823",
+ "gc_content": 65.93299095133285,
+ "lengte": 4089
+}, {
+ "contig": "contig_9168",
+ "gc_content": 50.678134303671854,
+ "lengte": 3023
+}, {
+ "contig": "contig_42874",
+ "gc_content": 68.40148698884758,
+ "lengte": 2690
+}, {
+ "contig": "contig_27732",
+ "gc_content": 55.880121396054626,
+ "lengte": 2636
+}, {
+ "contig": "contig_47029",
+ "gc_content": 62.40891555936562,
+ "lengte": 2333
+}, {
+ "contig": "contig_47660",
+ "gc_content": 67.26914229378902,
+ "lengte": 3043
+}, {
+ "contig": "contig_961",
+ "gc_content": 64.15868673050615,
+ "lengte": 2193
+}, {
+ "contig": "contig_11418",
+ "gc_content": 50.98870056497176,
+ "lengte": 2124
+}, {
+ "contig": "contig_23005",
+ "gc_content": 62.84319707138499,
+ "lengte": 1639
+}, {
+ "contig": "contig_58876",
+ "gc_content": 69.73232669869594,
+ "lengte": 1457
+}, {
+ "contig": "contig_23282",
+ "gc_content": 64.80286738351253,
+ "lengte": 1395
+}, {
+ "contig": "contig_23653",
+ "gc_content": 67.85714285714286,
+ "lengte": 1148
+}, {
+ "contig": "contig_31532",
+ "gc_content": 61.81342632955536,
+ "lengte": 1147
+}, {
+ "contig": "contig_26075",
+ "gc_content": 63.41463414634146,
+ "lengte": 1271
+}, {
+ "contig": "contig_37760",
+ "gc_content": 72.56038647342994,
+ "lengte": 1035
+}];
+
+var data = d3.entries(values);
+
+var x_data = "gc_content";
+var y_data = "lengte"
+
+console.log(values[2]);
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+/* 
+ * value accessor - returns the value to encode for a given data object.
+ * scale - maps value to a visual display encoding, such as a pixel position.
+ * map function - maps from data value to display value
+ * axis - sets up axis
+ */ 
+
+// setup x 
+var xValue = function(d) { return d[x_data];}, // data -> value
+    xScale = d3.scale.linear().range([0, width]), // value -> display
+    xMap = function(d) { return xScale(xValue(d));}, // data -> display
+    xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+
+// setup y
+var yValue = function(d) { return d[y_data];}, // data -> value
+    yScale = d3.scale.linear().range([height, 0]), // value -> display
+    yMap = function(d) { return yScale(yValue(d));}, // data -> display
+    yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+// setup fill color
+
+// add the graph canvas to the body of the webpage
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// add the tooltip area to the webpage
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+// load data
+  // don't want dots overlapping axis, so add in buffer to data domain
+  xScale.domain([d3.min(values, xValue)-1, d3.max(values, xValue)+1]);
+  yScale.domain([d3.min(values, yValue)-1, d3.max(values, yValue)+1]);
+
+  // x-axis
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text(x_data);
+
+  // y-axis
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text(y_data);
+
+  // draw dots
+  svg.selectAll(".dot")
+      .data(values)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 4)
+      .attr("cx", xMap)
+      .attr("cy", yMap)
+      .style("fill", "#58ACFA")
+      .style("opacity", 1)
+
+      .on("mouseover", function(d) {
+          tooltip.transition()
+               .duration(200)
+               .style("opacity", .9);
+          tooltip.html(d.contig + "<br/> (" + xValue(d) 
+	        + ", " + yValue(d) + ")")
+               .style("left", (d3.event.pageX + 5) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(d) {
+          tooltip.transition()
+               .duration(500)
+               .style("opacity", 0);
+      })
+      .on("click", function(d) {
+      	d3.select(this)
+      		.style("opacity", .5);
+      });
+
+</script>
+</body>
+</html>
