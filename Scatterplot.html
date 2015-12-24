@@ -1240,6 +1240,8 @@ var values = [
  "lengte": 1035
 }];
 
+var contigs_remove = [];
+
 var data = d3.entries(values);
 
 var x_data = "gc_content";
@@ -1247,7 +1249,7 @@ var y_data = "lengte"
 
 console.log(values[2]);
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -1339,8 +1341,24 @@ var tooltip = d3.select("body").append("div")
                .style("opacity", 0);
       })
       .on("click", function(d) {
+      	var active = this.active ? false : true,
+      		newOpacity = active ? .5 : 1;
       	d3.select(this)
-      		.style("opacity", .5);
+      		.style("opacity", newOpacity);
+      	
+      	this.active = active;
+
+      	if (this.active == true) {
+      		contigs_remove.push(d.contig); 
+      	}
+
+      	if (this.active == false) {
+      		var contig_index = contigs_remove.indexOf(d.contig);
+      		if (contig_index > -1 ) {
+      			contigs_remove.splice(contig_index, 1);
+      		}
+      	}
+      	console.log(contigs_remove);
       });
 
 </script>
