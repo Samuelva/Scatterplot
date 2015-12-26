@@ -1244,8 +1244,10 @@ var contigs_remove = [];
 
 var data = d3.entries(values);
 
-var x_data = "gc_content";
-var y_data = "lengte"
+var x_data = "gc_content",
+	y_data = "lengte",
+	colour = "#58ACFA";
+
 
 console.log(values[2]);
 
@@ -1323,7 +1325,7 @@ var tooltip = d3.select("body").append("div")
       .attr("r", 4)
       .attr("cx", xMap)
       .attr("cy", yMap)
-      .style("fill", "#58ACFA")
+      .style("fill", colour)
       .style("opacity", .5)
 
       .on("mouseover", function(d) {
