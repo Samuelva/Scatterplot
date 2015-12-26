@@ -1324,7 +1324,7 @@ var tooltip = d3.select("body").append("div")
       .attr("cx", xMap)
       .attr("cy", yMap)
       .style("fill", "#58ACFA")
-      .style("opacity", 1)
+      .style("opacity", .5)
 
       .on("mouseover", function(d) {
           tooltip.transition()
@@ -1342,7 +1342,7 @@ var tooltip = d3.select("body").append("div")
       })
       .on("click", function(d) {
       	var active = this.active ? false : true,
-      		newOpacity = active ? .5 : 1;
+      		newOpacity = active ? 1 : 0.5;
       	d3.select(this)
       		.style("opacity", newOpacity);
       	
