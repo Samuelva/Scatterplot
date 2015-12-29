@@ -1316,7 +1316,6 @@ var tooltip = d3.select("body").append("div")
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text(y_data);
-
   // draw dots
   svg.selectAll(".dot")
       .data(values)
@@ -1330,21 +1329,34 @@ var tooltip = d3.select("body").append("div")
 
       .on("mouseover", function(d) {
           tooltip.transition()
-               .duration(200)
+               .duration(1000)
                .style("opacity", .9);
           tooltip.html(d.contig + "<br/> (" + xValue(d) 
 	        + ", " + yValue(d) + ")")
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
+
+           if (d3.select(this).style("opacity") != 1) {
+	      	d3.select(this)
+	      		.style("opacity", .7);
+	      }          
       })
+
       .on("mouseout", function(d) {
           tooltip.transition()
                .duration(500)
                .style("opacity", 0);
+
+          if (d3.select(this).style("opacity") != 1) {
+	      	d3.select(this)
+	      		.style("opacity", .5);
+	      }
+	    
       })
+
       .on("click", function(d) {
-      	var active = this.active ? false : true,
-      		newOpacity = active ? 1 : 0.5;
+      	active = this.active ? false : true,
+      		newOpacity = active ? 1 : .5;
       	d3.select(this)
       		.style("opacity", newOpacity);
       	
