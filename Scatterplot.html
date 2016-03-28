@@ -22,14 +22,36 @@ body {
   width: 200px;
   height: 28px;
   pointer-events: none;
+  border: 1px solid black;
+  background-color: white;
 }
+
+.lasso path {
+  stroke: rgb(80,80,80);
+  stroke-width:2px;
+}
+
+.lasso .drawn {
+  fill-opacity:.05 ;
+}
+
+.lasso .loop_close {
+  fill:none;
+  stroke-dasharray: 4,4;
+}
+
+.lasso .origin {
+  fill:#3399FF;
+  fill-opacity:.5;
+}
+
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-
+<script src="lasso.js"></script>
 <script>
 
-var values = [
+var contigs = [
 {
  "contig": "contig_45487",
  "gc_content": 63.99360063993601,
@@ -1240,140 +1262,196 @@ var values = [
  "lengte": 1035
 }];
 
-var contigs_remove = [];
 
-var data = d3.entries(values);
+var selectedContigs = [];
 
-var x_data = "gc_content",
-	y_data = "lengte",
-	colour = "#58ACFA";
-
-
-console.log(values[2]);
+var xData = "gc_content",
+	yData = "lengte"
 
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
+    svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .on("dblclick", function(d) {
+        d3.selectAll(".dot")
+          .style("opacity", .5)
+        selectedContigs = []
+        lasso.items().classed({"unselected":true, "selected":false});
+      });
 
-/* 
- * value accessor - returns the value to encode for a given data object.
- * scale - maps value to a visual display encoding, such as a pixel position.
- * map function - maps from data value to display value
- * axis - sets up axis
- */ 
 
-// setup x 
-var xValue = function(d) { return d[x_data];}, // data -> value
-    xScale = d3.scale.linear().range([0, width]), // value -> display
-    xMap = function(d) { return xScale(xValue(d));}, // data -> display
-    xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+d3.select('body').append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
 
-// setup y
-var yValue = function(d) { return d[y_data];}, // data -> value
-    yScale = d3.scale.linear().range([height, 0]), // value -> display
-    yMap = function(d) { return yScale(yValue(d));}, // data -> display
-    yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-// setup fill color
-
-// add the graph canvas to the body of the webpage
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// add the tooltip area to the webpage
 var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-// load data
-  // don't want dots overlapping axis, so add in buffer to data domain
-  xScale.domain([d3.min(values, xValue)-1, d3.max(values, xValue)+1]);
-  yScale.domain([d3.min(values, yValue)-1, d3.max(values, yValue)+1]);
 
-  // x-axis
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", width)
-      .attr("y", -6)
-      .style("text-anchor", "end")
-      .text(x_data);
+var lasso_draw = function() {
+  lasso.items().filter(function(d) {return d.selected===true})
+    .classed({"unselected":false,"selected":true});
 
-  // y-axis
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text(y_data);
-  // draw dots
-  svg.selectAll(".dot")
-      .data(values)
-    .enter().append("circle")
-      .attr("class", "dot")
-      .attr("r", 4)
-      .attr("cx", xMap)
-      .attr("cy", yMap)
-      .style("fill", colour)
-      .style("opacity", .5)
+  lasso.items().filter(function(d) {return d.selected===false})
+    .classed({"unselected":true,"selected":false});
+};
 
-      .on("mouseover", function(d) {
-          tooltip.transition()
-               .duration(1000)
-               .style("opacity", .9);
-          tooltip.html(d.contig + "<br/> (" + xValue(d) 
-	        + ", " + yValue(d) + ")")
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
 
-           if (d3.select(this).style("opacity") != 1) {
-	      	d3.select(this)
-	      		.style("opacity", .7);
-	      }          
-      })
+var lasso_end = function() {
+  lasso.items()
+     .style("fill", function(d) { return d.contig; });
 
-      .on("mouseout", function(d) {
-          tooltip.transition()
-               .duration(500)
-               .style("opacity", 0);
+  lasso.items().filter(function(d) {return d.selected===true})
+    .classed({"unselected":false,"selected":true})
+    .attr("r",4)
+    .style("opacity", 1);
 
-          if (d3.select(this).style("opacity") != 1) {
-	      	d3.select(this)
-	      		.style("opacity", .5);
-	      }
-	    
-      })
+  var selected = lasso.items().filter(function(d) {return d.selected===true});
+  selected.each(function(d) {selectedContigs.push(d.contig)});
+};
 
-      .on("click", function(d) {
-      	active = this.active ? false : true,
-      		newOpacity = active ? 1 : .5;
+
+var lasso_area = svg.append("rect")
+                  .attr("width",width)
+                  .attr("height",height)
+                  .style("opacity",0);
+
+
+var lasso = d3.lasso()
+  .closePathDistance(75) // max distance for the lasso loop to be closed
+  .closePathSelect(true) // can items be selected by closing the path?
+  .hoverSelect(true) // can items by selected by hovering over them?
+  .area(lasso_area) // area where the lasso can be started
+  .on("draw",lasso_draw) // lasso draw function
+  .on("end",lasso_end); // lasso end function
+
+
+svg.append("g")
+  .attr("class", "x axis")
+  .attr("transform", "translate(0," + height + ")")
+  .append("text")
+  .attr("class", "label")
+  .attr("x", width)
+  .attr("y", -6)
+  .style("text-anchor", "end")
+
+
+svg.append("g")
+  .attr("class", "y axis")
+  .append("text")
+  .attr("class", "label")
+  .attr("transform", "rotate(-90)")
+  .attr("y", 6)
+  .attr("dy", ".71em")
+  .style("text-anchor", "end")
+
+// update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+//     var contigs = bindingContext.$parent.contigs,
+//         selectedContigs = bindingContext.$parent.selectedContigs,
+//         xData = bindingContext.$data.xData(),
+//         xLogarithmic = bindingContext.$data.xLogarithmic(),
+//         yData = bindingContext.$data.yData(),
+//         yLogarithmic = bindingContext.$data.yLogarithmic(),
+//         dirty = bindingContext.$parent.dirty();
+
+// bindingContext.$data.dirty(false);
+
+// var margin = {top: 20, right: 20, bottom: 30, left: 50},
+//     width = 550 - margin.left - margin.right,
+//     height = 500 - margin.top - margin.bottom,
+//     svg = d3.select(element).select("g"),
+//     tooltip = d3.select('body').select('.tooltip');
+
+var xValue = function(d) { return d[xData];}, // data -> value
+    xScale = d3.scale.linear().range([0, width]),
+    xMap = function(d) { return xScale(xValue(d));}, // data -> display
+    xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+
+
+var yValue = function(d) { return d[yData];},
+    yScale = d3.scale.linear().range([height, 0]),
+    yMap = function(d) { return yScale(yValue(d));},
+    yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+
+xScale.domain([d3.min(contigs, xValue), d3.max(contigs, xValue)]);
+yScale.domain([d3.min(contigs, yValue), d3.max(contigs, yValue)]);
+
+
+svg.select('.x').transition().duration(500).call(xAxis);
+svg.select('.x').select('.label').text(xData);
+svg.select('.y').transition().duration(500).call(yAxis);
+svg.select('.y').select('.label').text(yData);
+
+
+var dots = svg.selectAll(".dot").data(contigs);
+
+
+dots.exit()
+  .transition()
+  .attr("r", 0)
+  .remove();
+
+
+dots.enter().append("circle")
+  .attr("class", "dot")
+  .attr("r", 0)
+  .style("fill", colour)
+  .style("opacity", .5)
+  .on("mouseover", function(d) {
+      tooltip.transition()
+           .duration(200)
+           .style("opacity", 1);
+      tooltip.html(d.contig)
+           .style("left", (d3.event.pageX + 5) + "px")
+           .style("top", (d3.event.pageY - 28) + "px");
+
+       if (d3.select(this).style("opacity") != 1) {
       	d3.select(this)
-      		.style("opacity", newOpacity);
-      	
-      	this.active = active;
+      		.style("opacity", .7);
+      }          
+  })
+  .on("mouseout", function(d) {
+      tooltip.transition()
+           .duration(500)
+           .style("opacity", 0);
+      if (d3.select(this).style("opacity") != 1) {
+      	d3.select(this)
+      		.style("opacity", .5);
+      }    
+  })
+  .on("click", function(d) {
+    if (d3.select(this).attr("class") == "dot unselected" || 
+      d3.select(this).attr("class") == "dot") {
+  	d3.select(this)
+  		.style("opacity", 1)
+      .classed({"unselected":false, "selected":true});
+    selectedContigs.push(d.contig)
+    } else if (d3.select(this).attr("class") == "dot selected") {
+      d3.select(this)
+        .style("opacity", .5)
+        .classed({"unselected":true, "selected":false});
+      var contigIndex = selectedContigs.indexOf(d.contig);
+      if (contigIndex > -1) {
+        selectedContigs.splice(contigIndex, 1);
+      }
+  	}
+  });
 
-      	if (this.active == true) {
-      		contigs_remove.push(d.contig); 
-      	}
+dots.transition()
+  .style("fill", function(d) {return d.color; })
+  .attr("r", 4)
+  .attr("cx", xMap)
+  .attr("cy", yMap);
 
-      	if (this.active == false) {
-      		var contig_index = contigs_remove.indexOf(d.contig);
-      		if (contig_index > -1 ) {
-      			contigs_remove.splice(contig_index, 1);
-      		}
-      	}
-      	console.log(contigs_remove);
-      });
+lasso.items(d3.selectAll(".dot"));
+svg.call(lasso);
 
 </script>
 </body>
