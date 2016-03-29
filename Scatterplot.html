@@ -1313,7 +1313,11 @@ var lasso_end = function() {
     .style("opacity", 1);
 
   var selected = lasso.items().filter(function(d) {return d.selected===true});
-  selected.each(function(d) {selectedContigs.push(d.contig)});
+  selected.each(function(d) {
+    if (!(selectedContigs.indexOf(d.contig) > -1)) {
+      selectedContigs.push(d.contig)}
+    });
+  console.log(selectedContigs)
 };
 
 
@@ -1402,8 +1406,8 @@ dots.exit()
 dots.enter().append("circle")
   .attr("class", "dot")
   .attr("r", 0)
-  .style("fill", colour)
   .style("opacity", .5)
+  .style("fill", function(d) { return d.color; })
   .on("mouseover", function(d) {
       tooltip.transition()
            .duration(200)
